@@ -15,7 +15,6 @@
                 <th>Close Date</th>
                 <th>PNL</th>
                 <th>% PNL</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -29,13 +28,6 @@
                 <td>{{ operation.close_date }}</td>
                 <td>{{ operation.pnl }}</td>
                 <td>{{ operation.pnl_percentage }}</td>
-                <td>
-                    {% if operation.close_date is none %}
-                    <a href="{{ url_for('operations.close_trade_page', operation_id=operation.id) }}" class="button is-primary">Close Trade</a>
-                    {% else %}
-                    No Action possible
-                    {% endif %}
-                </td>
             </tr>
             {% endfor %}
         </tbody>

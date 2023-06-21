@@ -9,39 +9,14 @@ from app.models.operations import Operation
 from app.models.cash_position import CashPosition
 
 
-@bp.route('/')
-def index():
-    operations = Operation.query.all()
-    return render_template('operations/all_trades.html', operations=operations)
-
-
-@bp.route('/new', methods=['GET', 'POST'])
-def new_trade():
-    if request.method == 'POST':
-        user = request.form.get('user')
-        ticker = request.form.get('ticker')
-        entry_date = request.form.get('entry_date')
-        entry_price = float(request.form.get('entry_price'))
-        size = float(request.form.get('size'))
-        broker = request.form.get('broker')
-        trade_type = request.form.get('type')
-
-        operation = Operation(ticker=ticker, entry_date=entry_date, entry_price=entry_price, size=size,
-                              broker=broker, type=trade_type, user=user)
-        operation.save()
-
-        return redirect('/operations/new')
-    else:
-            return render_template('operations/open_trade.html')
-
-
-@bp.route('/open_trades', methods=['GET', 'POST'])
-def open_trades():
+@bp.route('/', methods=['GET', 'POST'])
+def portfolio():
     # Assuming the user is always "koki" for now
     user = "koki"
 
     # Fetch all open trades
-    open_trades = Operation.query.filter(Operation.close_date.is_(None), Operation.user == user).all()
+    open_trades = Operation.query.filter(
+        Operation.close_date.is_(None), Operation.user == user).all()
 
     # Retrieve the cash position of the user
     cash_position = (
@@ -71,7 +46,42 @@ def open_trades():
 
     # Convert the figure to JSON for rendering in the template
     chart_json = json.dumps(fig, cls=PlotlyJSONEncoder)
-    return render_template('operations/open_trades.html', operations=open_trades, chart_json=chart_json, cash_position=cash_position)
+    return render_template('operations/open_trades.html',
+                           operations=open_trades,
+                           chart_json=chart_json,
+                           cash_position=cash_position)
+
+
+@bp.route('/history')
+def history():
+    # Assuming the user is always "koki" for now
+    user = "koki"
+    all_op = Operation.query.all()
+    operations = Operation.query.filter(
+        Operation.close_date.is_not(None), Operation.user == user).all()
+    print(operations)
+    print(all_op)
+    return render_template('operations/all_trades.html', operations=operations)
+
+
+@bp.route('/new', methods=['GET', 'POST'])
+def new_trade():
+    if request.method == 'POST':
+        user = request.form.get('user')
+        ticker = request.form.get('ticker')
+        entry_date = request.form.get('entry_date')
+        entry_price = float(request.form.get('entry_price'))
+        size = float(request.form.get('size'))
+        broker = request.form.get('broker')
+        trade_type = request.form.get('type')
+
+        operation = Operation(ticker=ticker, entry_date=entry_date, entry_price=entry_price, size=size,
+                              broker=broker, type=trade_type, user=user)
+        operation.save()
+
+        return redirect(url_for('operations.new_trade'))
+    else:
+        return render_template('operations/open_trade.html')
 
 
 @bp.route('/close_trade', methods=['POST'])
