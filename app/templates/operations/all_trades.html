@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="title">Portfolio Operations</h1>
+<div class="content">
+    <table>
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Entry Date</th>
+                <th>Entry Price</th>
+                <th>Size</th>
+                <th>Close Price</th>
+                <th>Close Date</th>
+                <th>PNL</th>
+                <th>% PNL</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for operation in operations %}
+            <tr>
+                <td>{{ operation.ticker }}</td>
+                <td>{{ operation.entry_date }}</td>
+                <td>{{ operation.entry_price }}</td>
+                <td>{{ operation.size }}</td>
+                <td>{{ operation.close_price }}</td>
+                <td>{{ operation.close_date }}</td>
+                <td>{{ operation.pnl }}</td>
+                <td>{{ operation.pnl_percentage }}</td>
+                <td>
+                    {% if operation.close_date is none %}
+                    <a href="{{ url_for('operations.close_trade_page', operation_id=operation.id) }}" class="button is-primary">Close Trade</a>
+                    {% else %}
+                    No Action possible
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

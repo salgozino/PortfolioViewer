@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="title">New Cash Position</h1>
+
+<form method="POST" action="/cash/new">
+    <div class="field">
+        <label class="label">Username</label>
+        <div class="control">
+            <input class="input" type="string" name="user" value="koki" required>
+        </div>
+    </div>
+    
+    <div class="field">
+        <label class="label">Date</label>
+        <div class="control">
+            <input class="input" type="date" id="date" name="date" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Value</label>
+        <div class="control">
+            <input class="input" type="number" step="0.01" name="value" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-primary" type="submit">Save</button>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    function loadFunction() {
+    // body...
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10){
+        dd='0'+dd;
+    } 
+    if(mm<10){
+        mm='0'+mm;
+    } 
+
+    today = yyyy+'-'+mm+'-'+dd;                
+    document.getElementById("date").value =today+"";
+}
+</script>
+{% endblock %}
