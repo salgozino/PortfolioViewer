@@ -3,3 +3,5 @@ flask-sqlalchemy==3.0.4
 cryptography==41.0.1
 pandas==2.0.2
 plotly==5.15.0
+flask-migrate==4.0.4
+sqlalchemy-utils==0.41.1
